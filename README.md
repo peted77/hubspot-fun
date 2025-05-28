@@ -9,3 +9,5 @@ The code in this repository is provided “as-is,” without warranty of any kin
 
 ## Scripts
 1. Smart Contact Deduplication Script for HubSpot Workflows
+
+# 1. Smart Contact Deduplication Script for HubSpot Workflows
