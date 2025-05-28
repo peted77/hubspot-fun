@@ -19,6 +19,7 @@ The code in this repository is provided “as-is,” without warranty of any kin
 # 📃 Scripts
 ### 1. Smart Contact Deduplication Script for HubSpot Workflows
 ### 2. HubSpot Company Dedupe Script
+### 3. HubSpot Phone Number Normalizer
 
 # 1. Smart Contact Deduplication Script for HubSpot Workflows
 Uses a series of prioritized matching strategies to identify duplicate contacts.
@@ -57,3 +58,39 @@ This deduplication script evaluates company records using a prioritized, multi-s
 - It handles previously merged records using the hs_is_merged property to avoid conflicts.
 - Merge status and diagnostic info (match type, skipped IDs, failed merges, etc.) are returned to the workflow via outputFields.
 
+# 3. HubSpot Phone Number Normalizer
+Normalize phone numbers in HubSpot contact records using a custom code action inside workflows. This script converts U.S. phone numbers into E.164 format and supports four key fields: `phone`, `mobilephone`, `hq_phone_number`, and `alt_phone_number`.
+## Features
+- Normalizes phone numbers to `+1XXXXXXXXXX`
+- Supports multiple standard and custom fields
+- Avoids redundant updates
+- Retries on API rate limit errors (HTTP 429)
+- Logs every normalization decision
+
+## Requirements
+- HubSpot Operations Hub (for custom code actions)
+- A [HubSpot Private App](https://developers.hubspot.com/docs/api/private-apps) with:
+  - `crm.objects.contacts.read`
+  - `crm.objects.contacts.write`
+- Node.js execution environment (provided by HubSpot)
+
+## Setup Instructions
+1. Create or edit a **Contact-based workflow** in HubSpot.
+2. Add a **Custom Code** action.
+3. Paste in the code from `index.js`.
+4. Under **Secrets**, add:
+
+| Name         | Value (example)                 |
+|--------------|----------------------------------|
+| `secretName` | `pat-na1-abc123...` (your token) |
+
+5. Enroll contacts to trigger normalization.
+
+## Example
+**Before**:
+- `phone`: (305) 391-4414  
+- `hq_phone_number`: 305-391-4414
+
+**After**:
+- `phone`: +13053914414  
+- `hq_phone_number`: +13053914414
